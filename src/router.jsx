@@ -1,8 +1,9 @@
 import React from 'react';
+import { Home } from './components';
 
 const Router = () => {
   return (
-    <div> this is router </div>
+    <Home />
   );
 }
 
