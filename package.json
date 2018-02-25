@@ -31,8 +31,10 @@
     "webpack-stream": "^4.0.2"
   },
   "dependencies": {
+    "element-react": "^1.4.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   }

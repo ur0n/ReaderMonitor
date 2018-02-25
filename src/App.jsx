@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Header, ColumnContainer } from './components';
+import Router from './router';
 
 class App extends Component {
   constructor(props){
@@ -6,7 +8,10 @@ class App extends Component {
   }
   render(){
     return (
-      <div> hello world </div>
+      <ColumnContainer>
+        <Header title="Hello"/>
+        <Router />
+      </ColumnContainer>
     );
   }
 }

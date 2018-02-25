@@ -12,7 +12,10 @@ const webpackConfig = {
       },
       { test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.png$/, loader: "url-loader?limit=100000" },
-      { test: /\.jpg$/, loader: "file-loader" }
+      {
+        test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
+        loader: "file-loader"
+      }
     ]
   },
   resolve: {
