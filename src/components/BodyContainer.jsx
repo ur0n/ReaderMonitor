@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ColumnContainer } from './';
 import { colors } from '../config';
+import { Link, withRouter } from 'react-router-dom';
 import { Card, Layout } from 'element-react';
 
 const styles = {
@@ -21,62 +22,74 @@ const styles = {
   }
 }
 
-const Reader = ({children}) => {
+const Reader = ({children, onClick}) => {
   return (
-    <Card style={styles.reader}>
-      {children}
+    <Card style={styles.reader} >
+      <div onClick={onClick}>
+        {children}
+      </div>
     </Card>
   );
 }
-export const BodyContainer = () => {
-  return (
-    <ColumnContainer style={styles.body}>
-      <Layout.Row style={styles.row} gutter="50">
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-      </Layout.Row>
-      <Layout.Row style={styles.row} gutter="50">
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-        <Layout.Col span="8">
-          <div className="grid-content bg-purple">
-            <Reader>
-              Reader
-            </Reader>
-          </div>
-        </Layout.Col>
-      </Layout.Row>
-    </ColumnContainer>
-  );
+
+class Body extends Component {
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    console.log(this.props);
+    return (
+      <ColumnContainer style={styles.body}>
+        <Layout.Row style={styles.row} gutter="50">
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader onClick={() => this.props.history.push(`/reader/1`)}>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+        </Layout.Row>
+        <Layout.Row style={styles.row} gutter="50">
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+          <Layout.Col span="8">
+            <div className="grid-content bg-purple">
+              <Reader>
+                Reader
+              </Reader>
+            </div>
+          </Layout.Col>
+        </Layout.Row>
+      </ColumnContainer>
+    );
+  }
 }
+
+export const BodyContainer = withRouter(Body);

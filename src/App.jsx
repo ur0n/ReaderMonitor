@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { Header, ColumnContainer } from './components';
-import Router from './router';
+import { Header, SideBar, ColumnContainer, RowContainer } from './components';
+import MonitorRouter from './router';
 import 'element-theme-chalk';
 
 const styles = {
   app: {
+    height: '100%'
+  },
+  body: {
+    width: '100%',
     height: '100%'
   }
 }
@@ -17,7 +21,10 @@ class App extends Component {
     return (
       <ColumnContainer style={styles.app}>
         <Header title="ReaderMonitor"/>
-        <Router />
+        <RowContainer style={styles.body}>
+          <SideBar />
+          <MonitorRouter />
+        </RowContainer>
       </ColumnContainer>
     );
   }
