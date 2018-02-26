@@ -36,6 +36,7 @@ const styles = {
   logContentContainer: {
     flex: 9, width: '100%',
     justifyContent: 'flex-start',
+    overflow: 'scroll',
   },
   logText: {
     color: colors.darkWhite,
@@ -73,17 +74,11 @@ export const Log = (props) => {
               title='Log'
               />
             <ColumnContainer style={styles.logContentContainer}>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
-              <LogText> log log log </LogText>
+              {(Array.from(Array(100), (key, i) => i)).map(i =>
+                <LogText key={i}>
+                  2018-02-17 10:19:00.237 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+                </LogText>
+              )}
               </ColumnContainer>
           </ColumnContainer>
         </Card>
