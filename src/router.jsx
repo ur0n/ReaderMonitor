@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Log, SideBar, BodyContainer } from './components';
-import { BrowserRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { HashRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom';
 
 const styles = {
   root: {
@@ -42,9 +42,9 @@ class Layout extends Component {
 
 const MonitorRouter = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Route path="/" component={withRouter(Layout)} />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

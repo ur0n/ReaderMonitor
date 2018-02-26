@@ -29,24 +29,6 @@ class SideBarComponent extends Component {
           onOpen={this.onOpen.bind(this)}
           onClose={this.onClose.bind(this)}
         >
-          <Menu.SubMenu
-            index="1"
-            title={
-              <span>
-                <i className="el-icon-message" />
-                Navigator One
-              </span>
-            }
-          >
-            <Menu.ItemGroup title="Group One">
-              <Menu.Item index="1-1">Option 1</Menu.Item>
-              <Menu.Item index="1-2">Option 2</Menu.Item>
-            </Menu.ItemGroup>
-            <Menu.ItemGroup title="Group Two">
-              <Menu.Item index="1-3">Option 3</Menu.Item>
-            </Menu.ItemGroup>
-          </Menu.SubMenu>
-
           <Menu.Item index="2">
             <i className="el-icon-menu" />
             Navigator Two
