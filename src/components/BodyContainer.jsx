@@ -24,11 +24,13 @@ const styles = {
 
 const Reader = ({children, onClick}) => {
   return (
-    <Card style={styles.reader} >
-      <div onClick={onClick}>
-        {children}
-      </div>
-    </Card>
+    <div onClick={onClick}>
+      <Card style={styles.reader} >
+        <div>
+          {children}
+        </div>
+      </Card>
+    </div>
   );
 }
 
@@ -38,53 +40,40 @@ class Body extends Component {
   }
 
   render(){
-    console.log(this.props);
     return (
       <ColumnContainer style={styles.body}>
         <Layout.Row style={styles.row} gutter="50">
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader onClick={() => this.props.history.push(`/reader/1`)}>
-                Reader
-              </Reader>
-            </div>
+            <Reader onClick={() => this.props.history.push(`/reader/1`)}>
+              Reader
+            </Reader>
           </Layout.Col>
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader>
-                Reader
-              </Reader>
-            </div>
+            <Reader>
+              Reader
+            </Reader>
           </Layout.Col>
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader>
-                Reader
-              </Reader>
-            </div>
+            <Reader>
+              Reader
+            </Reader>
           </Layout.Col>
         </Layout.Row>
         <Layout.Row style={styles.row} gutter="50">
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader>
-                Reader
-              </Reader>
-            </div>
+            <Reader>
+              Reader
+            </Reader>
           </Layout.Col>
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader>
-                Reader
-              </Reader>
-            </div>
+            <Reader>
+              Reader
+            </Reader>
           </Layout.Col>
           <Layout.Col span="8">
-            <div className="grid-content bg-purple">
-              <Reader>
-                Reader
-              </Reader>
-            </div>
+            <Reader>
+              Reader
+            </Reader>
           </Layout.Col>
         </Layout.Row>
       </ColumnContainer>

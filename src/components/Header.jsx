@@ -1,5 +1,6 @@
 import React from 'react';
 import { RowContainer } from './';
+import { m } from '../lib';
 import { colors } from '../config';
 
 const styles = {
@@ -17,16 +18,19 @@ const styles = {
   }
 }
 
-const Title = ({name}) => {
+const Title = ({name, titleStyle}) => {
   return (
-    <div style={styles.title}>
+    <div style={m([styles.title, titleStyle])}>
       {name}
     </div>
   );
 }
 
-export const Header = ({title}) => (
-  <RowContainer style={styles.header}>
-    <Title name={title} />
+export const Header = ({title, style, titleStyle}) => (
+  <RowContainer style={m([styles.header, style])}>
+    <Title
+      name={title}
+      titleStyle={titleStyle}
+    />
   </RowContainer>
 )
