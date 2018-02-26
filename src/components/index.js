@@ -4,3 +4,4 @@ export * from './RowContainer';
 export * from './ColumnContainer';
 export * from './Home';
 export * from './SideBar';
+export * from './BodyContainer';

@@ -17,7 +17,7 @@ gulp.task('serve:watch', () => {
     console.log("restart!");
     electron.restart;
   });
-  gulp.watch(['./index.html', 'build/dist/bundle.js'], electron.reload);
+  gulp.watch(['./public/index.html', 'build/dist/bundle.js'], electron.reload);
   // RendererProcessが読み込むリソースが変更されたら, RendererProcessにreloadさせる
   gulp.watch(['.serve/styles/**/*.css', '.serve/renderer/**/*.{html,js}'], electron.reload);
 });
