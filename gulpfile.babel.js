@@ -23,14 +23,14 @@ gulp.task('serve:watch', () => {
 });
 
 
-gulp.task('package:darwin', ['build'], done => {
+gulp.task('package:darwin', ['serve:compile'], done => {
   packager({
-    dir: 'dist',              // アプリケーションのパッケージとなるディレクトリ
+    dir: './',              // アプリケーションのパッケージとなるディレクトリ
     out: 'release/darwin',    // .app や .exeの出力先ディレクトリ
-    name: 'ElectronApp',      // アプリケーション名
+    name: 'ReaderMonitor',      // アプリケーション名
     arch: 'x64',              // CPU種別. x64 or ia32
     platform: 'darwin',       // OS種別. darwin or win32 or linux
-    version: '0.28.1'         // Electronのversion
+    version: '1.8.2'         // Electronのversion
   }, (err, path) => {
     // 追加でパッケージに手を加えたければ, path配下を適宜いじる
     done();
