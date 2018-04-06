@@ -21,10 +21,7 @@ class App extends Component {
     return (
       <ColumnContainer style={styles.app}>
         <Header title="ReaderMonitor"/>
-        <RowContainer style={styles.body}>
-          <SideBar />
-          <MonitorRouter />
-        </RowContainer>
+        <MonitorRouter />
       </ColumnContainer>
     );
   }

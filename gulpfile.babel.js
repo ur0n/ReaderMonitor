@@ -40,6 +40,6 @@ gulp.task('package:darwin', ['serve:compile'], done => {
 gulp.task('serve:compile', () => {
   gulp.src(['src/**/*.js', 'src/**/*.jsx'])
   .pipe(plumber())
-  .pipe(webpack(webpackConfig))
+  .pipe(webpack(webpackConfig, require("webpack")))
   .pipe(gulp.dest('build/dist'))
 })
