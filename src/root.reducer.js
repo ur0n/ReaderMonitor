@@ -1,23 +1,8 @@
 import { combineReducers } from 'redux';
-
-const initialState = {
-  name: 'test'
-};
-
-const testReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'TEST':
-      return {
-        ...this.state
-      };
-      break;
-    default:
-     return {
-       ...state
-     };
-  }
-}
+import { homeReducer } from './home';
+import { logReducer } from './log';
 
 export const rootReducer = combineReducers({
-  testReducer,
+  home: homeReducer,
+  log: logReducer,
 });

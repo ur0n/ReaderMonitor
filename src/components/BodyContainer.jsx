@@ -18,7 +18,7 @@ const styles = {
     width: '100%',
   },
   reader: {
-    height: '200px'
+    height: '100px'
   }
 }
 
@@ -42,40 +42,26 @@ class Body extends Component {
   render(){
     return (
       <ColumnContainer style={styles.body}>
-        <Layout.Row style={styles.row} gutter="50">
-          <Layout.Col span="8">
-            <Reader onClick={() => this.props.history.push(`/reader/1`)}>
-              Reader
-            </Reader>
-          </Layout.Col>
-          <Layout.Col span="8">
-            <Reader>
-              Reader
-            </Reader>
-          </Layout.Col>
-          <Layout.Col span="8">
-            <Reader>
-              Reader
-            </Reader>
-          </Layout.Col>
-        </Layout.Row>
-        <Layout.Row style={styles.row} gutter="50">
-          <Layout.Col span="8">
-            <Reader>
-              Reader
-            </Reader>
-          </Layout.Col>
-          <Layout.Col span="8">
-            <Reader>
-              Reader
-            </Reader>
-          </Layout.Col>
-          <Layout.Col span="8">
-            <Reader>
-              Reader
-            </Reader>
-          </Layout.Col>
-        </Layout.Row>
+        {
+          (
+            [1, 2, 3].map(i => {
+              const inner = [1, 2, 3, 4].map(j => {
+                return (
+                  <Layout.Col key={j} span="5">
+                    <Reader onClick={() => this.props.history.push(`/reader/1`)}>
+                      { `${i}:${j}`}
+                    </Reader>
+                  </Layout.Col>
+                )
+              })
+              return (
+                <Layout.Row key={i} style={styles.row} gutter="50">
+                  { inner }
+                </Layout.Row>
+              )
+            })
+          )
+        }
       </ColumnContainer>
     );
   }

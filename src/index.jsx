@@ -7,10 +7,9 @@ import { rootReducer } from './root.reducer';
 import App from './App';
 
 /* 状態遷移(reducers)をstoreとして取得 */
-const store = createStore(
-  rootReducer,
-  applyMiddleware(thunk)
-);
+
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const store = createStoreWithMiddleware(rootReducer);
 
 render(
   <Provider store={store}>

@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
-import { Log, SideBar, BodyContainer } from './components';
+import { Log, SideBar, BodyContainer, RowContainer } from './components';
 import { HashRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+
+import { AntennaListScreen } from './home';
+import { SideBarScreen } from './side';
+import { LogViewScreen } from './log';
 
 const styles = {
   root: {
     display: 'flex',
     height: '100%',
-    width: '100%'
+    width: '100%',
+    minWidth: '280px',
+  },
+  body: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   }
 }
 
@@ -31,8 +42,8 @@ class Layout extends Component {
     return (
       <div style={styles.root}>
         <Switch>
-          <Route exact path="/" component={BodyContainer} />
-          <Route exact path="/reader/:id" component={Log} />
+          <Route exact path="/" component={AntennaListScreen} />
+          <Route exact path="/antenna/:id" component={LogViewScreen} />
           <Route component={NoMatch}/>
         </Switch>
       </div>
@@ -43,7 +54,10 @@ class Layout extends Component {
 const MonitorRouter = () => {
   return (
     <HashRouter>
-      <Route path="/" component={withRouter(Layout)} />
+      <RowContainer style={styles.body}>
+        <SideBarScreen />
+        <Route path="/" component={withRouter(Layout)} />
+      </RowContainer>
     </HashRouter>
   );
 }
