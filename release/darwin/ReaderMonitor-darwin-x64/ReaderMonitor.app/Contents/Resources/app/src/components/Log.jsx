@@ -55,7 +55,6 @@ const LogText = ({children}) => {
   );
 }
 
-// 最初にコネクト処理を入れる
 export const Log = (props) => {
   return (
     <ColumnContainer style={styles.logContainer}>

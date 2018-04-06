@@ -1,4 +1,4 @@
-import { GET_TAG_REPORT } from './log.type';
+import { GET_TAG_REPORT, CLEAN_REPORT_LIST } from './log.type';
 
 const initialState = {
   tagReportList: {},
@@ -7,18 +7,30 @@ const initialState = {
 export const logReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_TAG_REPORT:
-    const id = action.id;
-    return {
-      ...state,
-      tagReportList: {
-        ...state.tagReportList,
-        [id]: state.tagReportList[id] === undefined? [action.message] : [
-          ...state.tagReportList[id],
-          action.message
-        ]
+      const id = action.id;
+      return {
+        ...state,
+        tagReportList: {
+          ...state.tagReportList,
+          [id]: state.tagReportList[id] === undefined? [action.message] : [
+            ...state.tagReportList[id],
+            action.message
+          ]
+        }
       }
-    }
-    break;
+      break;
+    case CLEAN_REPORT_LIST:
+      const limit = 100;
+      const tagReportListOfId = state.tagReportList[action.id];
+      const newReportListOfId = tagReportListOfId.slice(tagReportListOfId.length - limit);
+      return {
+        ...state,
+        tagReportList: {
+          ...state.tagReportList,
+          [action.id]: newReportListOfId.length === limit? newReportListOfId : tagReportListOfId
+        }
+      }
+      break;
     default:
     return {
       ...state,

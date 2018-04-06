@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Card } from 'element-react';
 
-import { getTagReport } from '../log.action';
+import { getTagReport, cleanReportList } from '../log.action';
 import { RowContainer, ColumnContainer, Header } from '../../components';
 import { colors } from '../../config';
 
@@ -39,7 +40,11 @@ const styles = {
   logContentContainer: {
     flex: 9, width: '100%',
     justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  scrollAbleContent: {
     overflow: 'scroll',
+    width: '100%',
   },
   logText: {
     color: colors.darkWhite,
@@ -53,6 +58,7 @@ const styles = {
 const mapDispatchToProps = dispatch => {
   return {
     getTagReport: (id, message) => dispatch(getTagReport(id, message)),
+    cleanReportList: id => dispatch(cleanReportList(id)),
   };
 }
 
@@ -69,6 +75,94 @@ const LogText = ({children}) => {
       {children}
     </p>
   );
+}
+
+
+class LogTailer extends Component {
+  constructor(props){
+    super(props);
+  }
+
+  scrollToBottom(){
+    const { logContentContainer } = this.refs;
+    ReactDOM.findDOMNode(logContentContainer).scrollTop = logContentContainer.scrollHeight;
+  }
+
+  start() {
+    const self = this;
+    this.intervalTimer = setInterval(() => {
+      this.clean();
+    }, 5000)
+    console.log("TIMER START");
+  }
+
+  clean(){
+    if(this.reportListChanged){
+      this.props.cleanReportList(this.props.id);
+      console.log("CLEANED!!");
+    }
+  }
+
+  componentDidMount(){
+    this.start();
+  }
+
+  componentWillUpdate(nextProps) {
+    if(Object.keys(nextProps.logList).length !== 0 && Object.keys(this.props.logList).length !== 0){
+    this.reportListChanged = Object.keys(nextProps.logList)
+      .filter(key => nextProps.logList[key].length !== this.props.logList[key].length)
+      .length !== 0;
+
+      if(this.reportListChanged) {
+        const { logContentContainer } = this.refs;
+        const scrollPos = logContentContainer.scrollTop;
+        const scrollBottom = (logContentContainer.scrollHeight - logContentContainer.clientHeight);
+        this.scrollAtBottom = (scrollBottom <= 0) || (scrollPos === scrollBottom);
+      }
+    }
+  }
+
+  componentDidUpdate(){
+    if(this.scrollAtBottom){
+      this.scrollToBottom();
+    }
+  }
+
+  render(){
+    const tagReportList = this.props.logList;
+    const id = this.props.id;
+    const to = tagReportList[id] !== undefined? tagReportList[id].length -1 : 0;
+
+    return (
+      <RowContainer style={styles.contentContainer}>
+        <Card
+          style={styles.logView}
+          bodyStyle={styles.cardBody}
+          >
+          <ColumnContainer style={{height: '100%'}}>
+            <Header
+              style={styles.logHeader}
+              titleStyle={styles.logHeaderTitle}
+              title='Log'
+              />
+            <ColumnContainer style={styles.logContentContainer}>
+              <div ref="logContentContainer" style={styles.scrollAbleContent}>
+                {(Object.keys(tagReportList).length !== 0) && (
+                  tagReportList[id].map((report, i) => {
+                    return (
+                      <LogText name={`element${i}`} key={i}>
+                        { `${report.port} ${report.id} ${report.rssi} ${report.time} ${report.phase}` }
+                      </LogText>
+                    )
+                  })
+                )}
+              </div>
+            </ColumnContainer>
+          </ColumnContainer>
+        </Card>
+      </RowContainer>
+    )
+  }
 }
 
 // 最初にコネクト処理を入れる
@@ -115,9 +209,6 @@ class Log extends Component {
   render() {
     const { tagReportList } = this.props.log;
     const id = this.props.match.params.id;
-    console.log("========================");
-    console.log(tagReportList);
-    console.log("========================");
 
     return (
       <ColumnContainer style={styles.logContainer}>
@@ -125,31 +216,7 @@ class Log extends Component {
           style={styles.header}
           title='Reader Log'
           />
-        <RowContainer style={styles.contentContainer}>
-          <Card
-            style={styles.logView}
-            bodyStyle={styles.cardBody}
-            >
-            <ColumnContainer style={{height: '100%'}}>
-              <Header
-                style={styles.logHeader}
-                titleStyle={styles.logHeaderTitle}
-                title='Log'
-                />
-              <ColumnContainer style={styles.logContentContainer}>
-                {(Object.keys(tagReportList).length !== 0) && (
-                  tagReportList[id].map((report, i) => {
-                    return (
-                      <LogText key={i}>
-                        { `${report.port} ${report.id} ${report.rssi} ${report.time} ${report.phase}` }
-                      </LogText>
-                    )
-                  })
-                )}
-              </ColumnContainer>
-            </ColumnContainer>
-          </Card>
-        </RowContainer>
+        <LogTailer cleanReportList={this.props.cleanReportList} logList={tagReportList} id={id} />
       </ColumnContainer>
     );
   }
