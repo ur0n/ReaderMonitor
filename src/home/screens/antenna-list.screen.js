@@ -4,6 +4,9 @@ import { Link, withRouter } from 'react-router-dom';
 import { Card, Layout, Button, Tag } from 'element-react';
 
 import { ColumnContainer } from '../../components';
+ import { Antenna } from './Antenna';
+ import { Err } from './Err';
+
 import { colors } from '../../config';
 import {
   getAntennaListFromMonitorServer,
@@ -31,85 +34,6 @@ const styles = {
     width: '100%',
     overflow: 'scroll'
   },
-  antenna: {
-    width: '100%',
-    height: '100%'
-  },
-  errComtainer: {
-    height: '100%',
-    width: '100%'
-  },
-  err: {
-    margin: '30px',
-    padding: '10px',
-  }
-}
-
-const Online = () => {
-  return (
-    <Tag type="success"> Online </Tag>
-  )
-}
-
-const Offline = () => {
-  return (
-    <Tag type="danger"> Offline </Tag>
-  )
-}
-
-const Antenna = ({children, name, status, onClick}) => {
-  return (
-    <div style={{height: '100%'}} onClick={onClick}>
-      <Card
-        style={styles.antenna}
-        header={
-          <div>
-            <span style={{ "lineHeight": "36px" }}> { name } </span>
-            <span style={{ "float": "right" }}>
-              {status && (
-                <Online />
-              )}
-
-              {!status && (
-                <Offline />
-              )}
-            </span>
-          </div>
-        }
-        >
-        <div>
-          {children}
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-const ErrorHeader = ({handler}) => {
-  return (
-    <div>
-      <span style={{ "lineHeight": "36px" }}> Connection Error! </span>
-      <span style={{ "float": "right" }}>
-        <Button onClick={() => handler()} type="primary"> Retry! </Button>
-      </span>
-    </div>
-  )
-}
-
-const Err = ({err, handler}) => {
-  return (
-    <div style={styles.errComtainer} >
-      <Card
-        style={styles.err}
-        header={<ErrorHeader handler={handler} />}
-         >
-         <div style={{overflow: 'scroll'}}>
-        { err.message }
-        { err.stack }
-      </div>
-      </Card>
-    </div>
-  )
 }
 
 const mapStateToProps = state => {

@@ -72,7 +72,7 @@ class SideBar extends Component {
           onClose={this.onClose.bind(this)}
           onSelect={this.onSelect.bind(this)}
         >
-          <Menu.Item index="1" style={{height: '10%'}}>
+          <Menu.Item index="1" style={{height: '10%', minHeight: '55px'}}>
             <div onClick={this.homeOpen.bind(this)}>
               <i className="el-icon-menu" />
               Home
