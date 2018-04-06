@@ -54,11 +54,14 @@ class SideBar extends Component {
 
   homeOpen(){
     if(!this.props.location.pathname === '/'){
-      this.props.history.push(`/`)
+      this.props.history.push('/');
     }
   }
 
   antennaSelect(id){
+    if(!this.props.location.pathname === `/antenna/${id}`){
+      this.this.props.history.push(`/antenna/${id}`);
+    }
   }
 
   render(){
