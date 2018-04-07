@@ -13,9 +13,11 @@ const styles = {
   },
   header: {
     flex: 0.5,
+    minHeight: '40px'
   },
   contentContainer: {
     flex: 9.5,
+    backgroundColor: colors.blueWhite,
     width: '100%'
   },
   cardBody: {
@@ -30,7 +32,8 @@ const styles = {
   logHeader: {
     flex: 0.7,
     backgroundColor: colors.black,
-    borderColor: colors.lightBlack
+    borderColor: colors.lightBlack,
+    minHeight: '30px',
   },
   logHeaderTitle: {
     color: colors.darkWhite,
@@ -48,7 +51,7 @@ const styles = {
   },
   logText: {
     color: colors.darkWhite,
-    fontSize: '10px',
+    fontSize: '13px',
     fontFamiry: 'Helvetica Neue',
     alignSelf: 'flex-start',
     margin: '5px 0 0 10px',
@@ -108,10 +111,20 @@ class LogTailer extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    if(Object.keys(nextProps.logList).length !== 0 && Object.keys(this.props.logList).length !== 0){
-    this.reportListChanged = Object.keys(nextProps.logList)
-      .filter(key => nextProps.logList[key].length !== this.props.logList[key].length)
-      .length !== 0;
+    if(nextProps.id !== this.props.id){
+    }
+
+    const nextKeys = Object.keys(nextProps.logList).length;
+    const keys = Object.keys(this.props.logList).length;
+
+    if(nextKeys !== 0 && keys !== 0){
+      if(nextKeys !== keys){
+        this.reportListChanged = true;
+      } else {
+        this.reportListChanged = Object.keys(nextProps.logList)
+        .filter(key => nextProps.logList[key].length !== this.props.logList[key].length)
+        .length !== 0;
+      }
 
       if(this.reportListChanged) {
         const { logContentContainer } = this.refs;
@@ -147,7 +160,7 @@ class LogTailer extends Component {
               />
             <ColumnContainer style={styles.logContentContainer}>
               <div ref="logContentContainer" style={styles.scrollAbleContent}>
-                {(Object.keys(tagReportList).length !== 0) && (
+                {tagReportList[id] !== undefined && (
                   tagReportList[id].map((report, i) => {
                     return (
                       <LogText name={`element${i}`} key={i}>
@@ -175,17 +188,33 @@ class Log extends Component {
   }
 
   componentDidMount(){
-    const id = this.props.match.params.id;
-    this.startTagReporting(id);
+    this.id = this.props.match.params.id;
+    this.startTagReporting();
   }
 
-  startTagReporting(id){
+  componentWillUpdate(nextProps){
+    if(nextProps.match.params.id !== this.props.match.params.id){
+      console.log("============= CHANGE ================");
+      console.log(this.props.log.tagReportList);
+      this.call.removeListener('data', this.dataListener);
+
+      this.dataListener = message => {
+        this.props.getTagReport(nextProps.match.params.id, message);
+      }
+
+      this.call.on('data', this.dataListener);
+      this.call.write({id: nextProps.match.params.id});
+    }
+  }
+
+  startTagReporting(){
     const { client } = this.props.home;
     const call = client.connection.tagStream();
+    this.dataListener = message => {
+      this.props.getTagReport(this.id, message);
+    }
 
-    call.on('data', message => {
-      this.props.getTagReport(id, message);
-    })
+    call.on('data', this.dataListener);
 
     call.on('status', status => {
       console.log(status);
@@ -199,11 +228,8 @@ class Log extends Component {
       console.log('END');
     })
 
-    call.write({id: id});
-
-    this.setState({
-      call: call
-    });
+    call.write({id: this.id});
+    this.call = call;
   }
 
   render() {

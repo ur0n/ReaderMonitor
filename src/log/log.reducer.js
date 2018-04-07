@@ -22,6 +22,12 @@ export const logReducer = (state = initialState, action) => {
     case CLEAN_REPORT_LIST:
       const limit = 100;
       const tagReportListOfId = state.tagReportList[action.id];
+      if(tagReportListOfId === undefined){
+        return {
+          ...state
+        };
+      }
+
       const newReportListOfId = tagReportListOfId.slice(tagReportListOfId.length - limit);
       return {
         ...state,
