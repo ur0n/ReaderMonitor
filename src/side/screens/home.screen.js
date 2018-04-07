@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu } from 'element-react';
 import { Link, withRouter } from 'react-router-dom';
+import { colors } from '../../config';
 
 const styles = {
   sidebar: {
@@ -53,14 +54,14 @@ class SideBar extends Component {
   }
 
   homeOpen(){
-    if(!this.props.location.pathname === '/'){
+    if(this.props.location.pathname !== '/'){
       this.props.history.push('/');
     }
   }
 
   antennaSelect(id){
-    if(!this.props.location.pathname === `/antenna/${id}`){
-      this.this.props.history.push(`/antenna/${id}`);
+    if(this.props.location.pathname !== `/antenna/${id}`){
+      this.props.history.push(`/antenna/${id}`);
     }
   }
 
@@ -90,10 +91,10 @@ class SideBar extends Component {
                       <Menu.Item key={antenna.id} index={`${((Object.keys(antennaList).length * i) + (j + i)) + 2}`}>
                         <div onClick={() => this.antennaSelect(antenna.id) }>
                           {antenna.status && (
-                            <i className="el-icon-circle-check" />
+                            <i style={{color: colors.success}} className="el-icon-circle-check" />
                           )}
                           {!antenna.status && (
-                            <i className="el-icon-circle-close" />
+                            <i style={{color: colors.danger}} className="el-icon-circle-close" />
                           )}
                           { antenna.id }
                         </div>
