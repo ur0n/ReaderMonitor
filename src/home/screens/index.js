@@ -1,1 +1,1 @@
-export * from 'antenna-list.screen';
+export * from './antenna-list.screen';
