@@ -1,7 +1,6 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path')
 const url = require('url')
-require('electron-debug')({showDevTools: true});
 
 let win;
 function createWindow () {
@@ -25,7 +24,39 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+const isWindows = () => {
+  return process.platform === 'win32';
+}
+
+const isLinux = () => {
+  return process.platform === 'linux';
+}
+
+const commandOrCtrl = () => {
+  return (isWindows() || isLinux()) ? 'Ctrl' : 'Command';
+}
+
+function initialMenu() {
+  const template = [
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Toggle Chromium Developer Tools',
+          accelerator: 'Alt+' + commandOrCtrl() + '+I',
+          click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
+        }
+      ]
+    }
+  ]
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
+app.on('ready', () => {
+  createWindow();
+  initialMenu();
+})
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

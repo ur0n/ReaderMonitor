@@ -26,11 +26,12 @@ const base = {
   dir: './',              // アプリケーションのパッケージとなるディレクトリ
   name: 'ReaderMonitor',      // アプリケーション名
   arch: 'x64',              // CPU種別. x64 or ia32
-  version: '1.8.2'         // Electronのversion
+  version: '1.8.2',         // Electronのversion
+  overwrite: true
 };
 
 const linux = Object.assign(Object.assign({}, base), {out: 'release/linux', platform: 'linux'});
-const drawin = Object.assign(Object.assign({}, base), {out: 'release/drawin', platform: 'drawin'});
+const drawin = Object.assign(Object.assign({}, base), {out: 'release/darwin', platform: 'darwin'});
 
 gulp.task('package:linux', ['serve:compile'], done => {
   packager(linux, (err, path) => {
@@ -38,6 +39,7 @@ gulp.task('package:linux', ['serve:compile'], done => {
     done();
   });
 });
+
 
 gulp.task('package:drawin', ['serve:compile'], done => {
   packager(drawin, (err, path) => {
