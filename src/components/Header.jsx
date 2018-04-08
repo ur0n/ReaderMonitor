@@ -14,7 +14,7 @@ const styles = {
   title: {
     flex: 1,
     alignSelf: 'flex-start',
-    margin: '10px',
+    margin: '15px 30px',
   }
 }
 
@@ -26,11 +26,19 @@ const Title = ({name, titleStyle}) => {
   );
 }
 
-export const Header = ({title, style, titleStyle}) => (
-  <RowContainer style={m([styles.header, style])}>
-    <Title
-      name={title}
-      titleStyle={titleStyle}
-    />
-  </RowContainer>
-)
+export const Header = ({title, style, titleStyle, icon}) => {
+  return (
+    <RowContainer style={m([styles.header, style])}>
+      {icon !== undefined && (
+        <div>
+          <Title name={title} titleStyle={titleStyle} />
+          { icon }
+        </div>
+      )}
+
+      {icon === undefined && (
+        <Title name={title} titleStyle={titleStyle} />
+      )}
+    </RowContainer>
+  );
+}

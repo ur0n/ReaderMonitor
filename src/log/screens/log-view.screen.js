@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Card } from 'element-react';
 
 import { getTagReport, cleanReportList } from '../log.action';
-import { RowContainer, ColumnContainer, Header } from '../../components';
+import { RowContainer, ColumnContainer, Header, RFIDReport } from '../../components';
 import { colors } from '../../config';
 
 const styles = {
@@ -33,7 +33,7 @@ const styles = {
     flex: 0.7,
     backgroundColor: colors.black,
     borderColor: colors.lightBlack,
-    minHeight: '30px',
+    minHeight: '40px',
   },
   logHeaderTitle: {
     color: colors.darkWhite,
@@ -41,7 +41,8 @@ const styles = {
     fontFamiry: 'Helvetica Neue',
   },
   logContentContainer: {
-    flex: 9, width: '100%',
+    flex: 9,
+    width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
@@ -71,15 +72,6 @@ const mapStateToProps = state => {
     home: state.home
   };
 }
-
-const LogText = ({children}) => {
-  return (
-    <p style={styles.logText}>
-      {children}
-    </p>
-  );
-}
-
 
 class LogTailer extends Component {
   constructor(props){
@@ -163,10 +155,15 @@ class LogTailer extends Component {
                 {tagReportList[id] !== undefined && (
                   tagReportList[id].map((report, i) => {
                     return (
-                      <LogText name={`element${i}`} key={i}>
-                        { `${report.port} ${report.id} ${report.rssi} ${report.time} ${report.phase}` }
-                      </LogText>
-                    )
+                      <RFIDReport
+                        key={i}
+                        port={report.port}
+                        id={report.id}
+                        rssi={report.rssi}
+                        time={report.time}
+                        phase={report.phase}
+                      />
+                    );
                   })
                 )}
               </div>

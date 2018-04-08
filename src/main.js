@@ -1,6 +1,7 @@
-  const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
+require('electron-debug')({showDevTools: true});
 
 let win;
 function createWindow () {
