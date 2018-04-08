@@ -22,16 +22,27 @@ gulp.task('serve:watch', () => {
   gulp.watch(['.serve/styles/**/*.css', '.serve/renderer/**/*.{html,js}'], electron.reload);
 });
 
+const base = {
+  dir: './',              // アプリケーションのパッケージとなるディレクトリ
+  name: 'ReaderMonitor',      // アプリケーション名
+  arch: 'x64',              // CPU種別. x64 or ia32
+  version: '1.8.2',         // Electronのversion
+  overwrite: true
+};
 
-gulp.task('package:darwin', ['serve:compile'], done => {
-  packager({
-    dir: './',              // アプリケーションのパッケージとなるディレクトリ
-    out: 'release/darwin',    // .app や .exeの出力先ディレクトリ
-    name: 'ReaderMonitor',      // アプリケーション名
-    arch: 'x64',              // CPU種別. x64 or ia32
-    platform: 'darwin',       // OS種別. darwin or win32 or linux
-    version: '1.8.2'         // Electronのversion
-  }, (err, path) => {
+const linux = Object.assign(Object.assign({}, base), {out: 'release/linux', platform: 'linux'});
+const drawin = Object.assign(Object.assign({}, base), {out: 'release/darwin', platform: 'darwin'});
+
+gulp.task('package:linux', ['serve:compile'], done => {
+  packager(linux, (err, path) => {
+    // 追加でパッケージに手を加えたければ, path配下を適宜いじる
+    done();
+  });
+});
+
+
+gulp.task('package:drawin', ['serve:compile'], done => {
+  packager(drawin, (err, path) => {
     // 追加でパッケージに手を加えたければ, path配下を適宜いじる
     done();
   });

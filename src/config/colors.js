@@ -6,4 +6,7 @@ export const colors = {
   darkWhite: '#F9FAFC',
   danger: '#FF4949',
   success: '#13CE66',
+  blue: '#20A0FF',
+  lightBlue: '#58B7FF',
+  white: '#FFFFFF',
 }

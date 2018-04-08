@@ -8,7 +8,7 @@ const styles = {
   sidebar: {
     flexDirection: 'column',
     display: 'flex',
-    minWidth: '220px',
+    minWidth: '200px',
     height: '100%'
   },
   menu: {

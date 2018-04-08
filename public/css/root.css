@@ -8,6 +8,8 @@ body {
   width:100%;
   height:100%;
   margin: 0;
+  -webkit-app-region: drag; /* ドラッグ可能に */
+  -webkit-user-select: none; /* ドラッグはテキスト選択と競合するので禁止 */
 }
 
 #root {
