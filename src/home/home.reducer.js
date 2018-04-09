@@ -52,7 +52,7 @@ export const homeReducer = (state = initialState, action) => {
       const newAntennaList = Object.assign({}, state.antennaList);
       const ip = action.message.ip;
       const port = action.message.port;
-      const status = action.message.status === 1? false : true;
+      const status = action.message.status === 1? true : false;
       const newAntenna = { id: `${ip}:${port}`, status: status };
       if(newAntennaList[ip]) {
         newAntennaList[ip][port - 1] = newAntenna;

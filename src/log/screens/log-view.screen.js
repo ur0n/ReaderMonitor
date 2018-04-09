@@ -157,6 +157,7 @@ class LogTailer extends Component {
                     return (
                       <RFIDReport
                         key={i}
+                        ip={report.ip}
                         port={report.port}
                         id={report.id}
                         rssi={report.rssi}
