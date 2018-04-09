@@ -18,9 +18,10 @@ const styles = {
   },
 }
 
-export const RFIDReport = ({port, id, rssi, time, phase}) => {
+export const RFIDReport = ({ip, port, id, rssi, time, phase}) => {
   return (
     <div style={styles.container}>
+      <LogText style={styles.logText} text={ip} />
       <LogText style={styles.logText} text={port} />
       <LogText style={styles.logText} text={id} />
       <LogText style={styles.logText} text={rssi} />
