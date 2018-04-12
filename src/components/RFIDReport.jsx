@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const RFIDReport = ({ip, port, id, rssi, time, phase}) => {
+export const RFIDReport = ({ip, port, id, rssi, time, phase, frequency}) => {
 
   return (
     <div className={css(styles.container)}>
@@ -29,6 +29,7 @@ export const RFIDReport = ({ip, port, id, rssi, time, phase}) => {
       <LogText style={styles.logText} text={rssi} />
       <LogText style={styles.logText} text={time} />
       <LogText style={styles.logText} text={phase} />
+      <LogText style={styles.logText} text={frequency} />
     </div>
   );
 }

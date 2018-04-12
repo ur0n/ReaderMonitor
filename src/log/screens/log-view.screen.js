@@ -160,6 +160,7 @@ class LogTailer extends Component {
                         rssi={report.rssi}
                         time={report.time}
                         phase={report.phase}
+                        frequency={report.dopplerFrequency}
                       />
                     );
                   })
