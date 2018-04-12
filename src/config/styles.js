@@ -12,6 +12,7 @@ export const commonStyles = StyleSheet.create({
     width: '100%',
   },
   scrollAble: {
-    overflow: 'scroll',
+    overflowX: 'hidden',
+    overflowY: 'scroll',
   }
 });

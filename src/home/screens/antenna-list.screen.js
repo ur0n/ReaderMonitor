@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     width: '100%',
-    overflow: 'scroll'
   },
 });
 
