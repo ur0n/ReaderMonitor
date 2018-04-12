@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { Menu } from 'element-react';
 import { Link, withRouter } from 'react-router-dom';
 import { colors } from '../../config';
+import { StyleSheet, css } from 'aphrodite';
 
-const styles = {
+import { commonStyles } from '../../config';
+
+const styles = StyleSheet.create({
   sidebar: {
     flexDirection: 'column',
     display: 'flex',
@@ -14,8 +17,21 @@ const styles = {
   menu: {
     flex: 1,
     height: '100%',
-  }
-}
+  },
+  home: {
+    height: '10%',
+    minHeight: '55px'
+  },
+  antennaList: {
+    height: '90%'
+  },
+  success: {
+    color: colors.success,
+  },
+  danger: {
+    color: colors.danger,
+  },
+});
 
 const mapStateToProps = state => {
   return {
@@ -68,7 +84,7 @@ class SideBar extends Component {
   render(){
     const { antennaList, isLoding, isFetched } = this.props.home;
     return (
-      <div style={styles.sidebar}>
+      <div className={css(styles.sidebar)}>
         <Menu
           style={styles.menu}
           defaultActive={this.state.active}
@@ -76,14 +92,15 @@ class SideBar extends Component {
           onClose={this.onClose.bind(this)}
           onSelect={this.onSelect.bind(this)}
         >
-          <Menu.Item index="1" style={{height: '10%', minHeight: '55px'}}>
+          <Menu.Item index="1" className={css(styles.home)}>
             <div onClick={this.homeOpen.bind(this)}>
               <i className="el-icon-menu" />
               Home
             </div>
           </Menu.Item>
-          <Menu.ItemGroup title="AntennaList" style={{height: '90%'}}>
-            <div style={{height: '100%', overflow: 'scroll'}}>
+          <Menu.ItemGroup title="AntennaList" className={ css(styles.antennaList) }>
+            <div className={ css(commonStyles.hMax, commonStyles.scrollAble) } >
+
               {isFetched && !isLoding && (
                 Object.keys(antennaList).reduce((p ,host, i) => {
                   const antennaItems = antennaList[host].map((antenna, j)=> {
@@ -91,10 +108,10 @@ class SideBar extends Component {
                       <Menu.Item key={antenna.id} index={`${((Object.keys(antennaList).length * i) + (j + i)) + 2}`}>
                         <div onClick={() => this.antennaSelect(antenna.id) }>
                           {antenna.status && (
-                            <i style={{color: colors.success}} className="el-icon-circle-check" />
+                            <i className={"el-icon-circle-check", css(styles.success) } />
                           )}
                           {!antenna.status && (
-                            <i style={{color: colors.danger}} className="el-icon-circle-close" />
+                            <i className={"el-icon-circle-close", css(styles.danger) } />
                           )}
                           { antenna.id }
                         </div>

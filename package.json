@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
+    "aphrodite": "^2.1.1",
     "bytebuffer": "^5.0.1",
     "electron-debug": "^1.5.0",
     "element-react": "^1.4.11",

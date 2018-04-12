@@ -2,8 +2,9 @@ import React from 'react';
 import { RowContainer } from './';
 import { m } from '../lib';
 import { colors } from '../config';
+import { StyleSheet, css } from 'aphrodite';
 
-const styles = {
+const styles = StyleSheet.create({
   header: {
     alignSelf: 'stretch',
     backgroundColor: 'white',
@@ -16,11 +17,11 @@ const styles = {
     alignSelf: 'flex-start',
     margin: '15px 30px',
   }
-}
+});
 
 const Title = ({name, titleStyle}) => {
   return (
-    <div style={m([styles.title, titleStyle])}>
+    <div className={css(styles.title, titleStyle)}>
       {name}
     </div>
   );
@@ -28,7 +29,7 @@ const Title = ({name, titleStyle}) => {
 
 export const Header = ({title, style, titleStyle, icon}) => {
   return (
-    <RowContainer style={m([styles.header, style])}>
+    <RowContainer style={[styles.header, style]}>
       {icon !== undefined && (
         <div>
           <Title name={title} titleStyle={titleStyle} />
