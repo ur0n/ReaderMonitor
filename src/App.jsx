@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { StyleSheet, css } from 'aphrodite';
 import { Header, SideBar, ColumnContainer, RowContainer, RFIDIcon } from './components';
 import MonitorRouter from './router';
 import { colors, icons } from './config';
 import 'element-theme-chalk';
 
-const styles = {
+const styles = StyleSheet.create({
   app: {
     height: '100%'
   },
@@ -20,7 +21,7 @@ const styles = {
     letterSpacing: '0.1em',
     color: colors.lightBlue
   }
-}
+})
 
 class App extends Component {
   constructor(props){

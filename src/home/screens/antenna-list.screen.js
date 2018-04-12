@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Card, Layout, Button, Tag } from 'element-react';
+import { StyleSheet, css } from 'aphrodite';
 
 import { ColumnContainer } from '../../components';
- import { Antenna } from './Antenna';
- import { Err } from './Err';
+import { Antenna } from './Antenna';
+import { Err } from './Err';
 
 import { colors } from '../../config';
 import {
@@ -15,7 +16,7 @@ import {
   antennaHealthCallErr
 } from '../home.action';
 
-const styles = {
+const styles = StyleSheet.create({
   body: {
     flex: 9,
     backgroundColor: colors.blueWhite,
@@ -32,9 +33,8 @@ const styles = {
     flexWrap: 'wrap',
     alignItems: 'center',
     width: '100%',
-    overflow: 'scroll'
   },
-}
+});
 
 const mapStateToProps = state => {
   return {
@@ -117,7 +117,7 @@ class AntennaList extends Component {
             })
 
             return (
-              <div key={host} style={styles.row} >
+              <div key={host} className={css(styles.row)} >
                 { list }
               </div>
             );

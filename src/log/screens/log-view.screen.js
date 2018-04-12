@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Card } from 'element-react';
+import { StyleSheet, css } from 'aphrodite';
 
 import { getTagReport, cleanReportList } from '../log.action';
 import { RowContainer, ColumnContainer, Header, RFIDReport } from '../../components';
-import { colors } from '../../config';
+import { colors, commonStyles } from '../../config';
 
-const styles = {
+const styles = StyleSheet.create({
   logContainer: {
     width: '100%',
   },
@@ -19,10 +20,6 @@ const styles = {
     flex: 9.5,
     backgroundColor: colors.blueWhite,
     width: '100%'
-  },
-  cardBody: {
-    padding: 0,
-    height: '100%'
   },
   logView: {
     backgroundColor: colors.black,
@@ -57,7 +54,7 @@ const styles = {
     alignSelf: 'flex-start',
     margin: '5px 0 0 10px',
   },
-}
+});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -141,17 +138,17 @@ class LogTailer extends Component {
     return (
       <RowContainer style={styles.contentContainer}>
         <Card
-          style={styles.logView}
-          bodyStyle={styles.cardBody}
+          className={css(styles.logView)}
+          bodyStyle={{padding: 0, height: '100%'}}
           >
-          <ColumnContainer style={{height: '100%'}}>
+          <ColumnContainer style={commonStyles.hMax}>
             <Header
               style={styles.logHeader}
               titleStyle={styles.logHeaderTitle}
               title='Log'
               />
             <ColumnContainer style={styles.logContentContainer}>
-              <div ref="logContentContainer" style={styles.scrollAbleContent}>
+              <div ref="logContentContainer" style={{overflow: 'scroll'}} className={css(commonStyles.wMax)}>
                 {tagReportList[id] !== undefined && (
                   tagReportList[id].map((report, i) => {
                     return (
@@ -163,6 +160,7 @@ class LogTailer extends Component {
                         rssi={report.rssi}
                         time={report.time}
                         phase={report.phase}
+                        frequency={report.dopplerFrequency}
                       />
                     );
                   })

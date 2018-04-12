@@ -1,8 +1,9 @@
 import React from 'react';
+import { css } from 'aphrodite';
 
 export const LogText = ({text, style}) => {
   return (
-    <p style={style}>
+    <p className={css(style)}>
       { text }
     </p>
   );

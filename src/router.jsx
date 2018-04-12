@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Log, SideBar, BodyContainer, RowContainer } from './components';
+import { Log, SideBar, RowContainer } from './components';
 import { HashRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
 
 import { AntennaListScreen } from './home';
 import { SideBarScreen } from './side';
 import { LogViewScreen } from './log';
 
-const styles = {
+const styles = StyleSheet.create({
   root: {
     display: 'flex',
     height: '100%',
@@ -19,7 +20,7 @@ const styles = {
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   }
-}
+});
 
 const NoMatch = () => {
   return (
@@ -40,7 +41,7 @@ class Layout extends Component {
 
   render(){
     return (
-      <div style={styles.root}>
+      <div className={css(styles.root)}>
         <Switch>
           <Route exact path="/" component={AntennaListScreen} />
           <Route exact path="/antenna/:id" component={LogViewScreen} />
