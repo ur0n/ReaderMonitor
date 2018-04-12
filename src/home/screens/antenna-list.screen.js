@@ -102,7 +102,7 @@ class AntennaList extends Component {
   render(){
     const { antennaList, isFetched, isLoding, err } = this.props.home;
     return (
-      <ColumnContainer className={css(styles.body)}>
+      <ColumnContainer style={styles.body}>
         {isFetched && !isLoding && (
           Object.keys(antennaList).map(host => {
             const list = antennaList[host].map(antenna => {

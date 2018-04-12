@@ -26,9 +26,11 @@ const styles = StyleSheet.create({
     height: '90%'
   },
   success: {
+    margin: '0 10px 1px 10px',
     color: colors.success,
   },
   danger: {
+    margin: '0 10px 1px 10px',
     color: colors.danger,
   },
 });
@@ -108,10 +110,10 @@ class SideBar extends Component {
                       <Menu.Item key={antenna.id} index={`${((Object.keys(antennaList).length * i) + (j + i)) + 2}`}>
                         <div onClick={() => this.antennaSelect(antenna.id) }>
                           {antenna.status && (
-                            <i className={"el-icon-circle-check", css(styles.success) } />
+                            <i className={`${css(styles.success)} el-icon-circle-check`} />
                           )}
                           {!antenna.status && (
-                            <i className={"el-icon-circle-close", css(styles.danger) } />
+                            <i className={`${css(styles.danger)} el-icon-circle-close`} />
                           )}
                           { antenna.id }
                         </div>

@@ -7,19 +7,20 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'space-around',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    flexWrap: 'wrap'
   },
   logText: {
     color: colors.darkWhite,
     fontSize: '13px',
     fontFamiry: 'Helvetica Neue',
-    alignSelf: 'flex-start',
     margin: '5px 0 0 10px',
+    width: '90px'
   },
 });
 
 export const RFIDReport = ({ip, port, id, rssi, time, phase}) => {
+
   return (
     <div className={css(styles.container)}>
       <LogText style={styles.logText} text={ip} />

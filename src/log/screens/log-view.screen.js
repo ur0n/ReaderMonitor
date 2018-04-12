@@ -21,10 +21,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blueWhite,
     width: '100%'
   },
-  cardBody: {
-    padding: 0,
-    height: '100%'
-  },
   logView: {
     backgroundColor: colors.black,
     height: '80%',
@@ -143,7 +139,7 @@ class LogTailer extends Component {
       <RowContainer style={styles.contentContainer}>
         <Card
           className={css(styles.logView)}
-          bodyStyle={styles.cardBody}
+          bodyStyle={{padding: 0, height: '100%'}}
           >
           <ColumnContainer style={commonStyles.hMax}>
             <Header
@@ -152,7 +148,7 @@ class LogTailer extends Component {
               title='Log'
               />
             <ColumnContainer style={styles.logContentContainer}>
-              <div ref="logContentContainer" className={css(commonStyles.hMax, commonStyles.scrollAble)}>
+              <div ref="logContentContainer" style={{overflow: 'scroll'}} className={css(commonStyles.wMax)}>
                 {tagReportList[id] !== undefined && (
                   tagReportList[id].map((report, i) => {
                     return (
