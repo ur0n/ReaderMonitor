@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
   },
   header: {
     // backgroundColor: colors.lightBlue,
+    minHeight: '45px',
+    maxHeight: '45px'
   },
   headerTitle: {
     fontSize: '20px',
@@ -33,7 +35,7 @@ class App extends Component {
       <ColumnContainer style={styles.app}>
         <Header
           style={styles.header}
-          title="ReaderMonitor"
+          title=""
           titleStyle={styles.headerTitle}
           />
         <MonitorRouter />

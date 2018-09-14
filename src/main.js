@@ -10,7 +10,7 @@ function createWindow () {
     width: 1080,
     height: 680,
     minWidth: 900,
-    minHeight: 500,
+    minHeight: 600,
   });
 
   win.loadURL(url.format({
@@ -47,6 +47,18 @@ function initialMenu() {
           accelerator: 'Alt+' + commandOrCtrl() + '+I',
           click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
         }
+      ]
+    },
+    {
+      label: "Edit",
+      submenu: [
+        { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+        { type: "separator" },
+        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
       ]
     }
   ]

@@ -84,6 +84,10 @@ class AntennaList extends Component {
     })
   }
 
+  handleAntennaClick(antenna) {
+    this.props.history.push(`/antenna/graph/${antenna.id}`)
+  }
+
   getAntennaMap(antennaList){
     return antennaList.reduce((p, id) => {
       const host = id.split(':')[0];
@@ -110,7 +114,7 @@ class AntennaList extends Component {
                   key={antenna.id}
                   name={antenna.id}
                   status={antenna.status}
-                  onClick={() => this.props.history.push(`/antenna/${antenna.id}`)}
+                  onClick={() => this.handleAntennaClick(antenna)}
                   >
                 </Antenna>
               )

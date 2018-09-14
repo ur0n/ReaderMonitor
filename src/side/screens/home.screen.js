@@ -72,6 +72,7 @@ class SideBar extends Component {
   }
 
   homeOpen(){
+    this.props.history.push('/antenna');
     if(this.props.location.pathname !== '/'){
       this.props.history.push('/');
     }
