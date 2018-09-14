@@ -115,8 +115,6 @@ class GraphList extends Component {
     this.graphMargin.right +
     this.contentPadding.right;
 
-    // setInterval(() => this.ticks(), 1000)
-
     const now = new Date();
     const last = moment(now).add(100, 'm').toDate();
     this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
@@ -129,6 +127,7 @@ class GraphList extends Component {
     this.id = this.props.match.params.id;
   }
 
+  // GRPCのイベントの設定
   startTagReporting(){
     const { client } = this.props.home;
     const call = client.connection.tagStream();
@@ -194,10 +193,13 @@ class GraphList extends Component {
   componentDidUpdate() {
   }
 
+  // 画面がリサイズされた時
   handleResize(e) {
     this.handleContainerChange(this.containerRef)
   }
 
+  // 画面がリサイズされた時に実行される関数の実態
+  // 画面のグラフの表示個数の設定等をしている
   handleContainerChange(ref) {
     if(ref === null) return;
 
@@ -237,12 +239,12 @@ class GraphList extends Component {
     }
   }
 
-  ticks() {
-    const { yList } = this.state;
-    if(yList.length >= 50) yList.shift();
-    yList.push(Math.floor(Math.random() * Math.floor(100)));
-    this.setState({yList});
-  }
+  // ticks() {
+  //   const { yList } = this.state;
+  //   if(yList.length >= 50) yList.shift();
+  //   yList.push(Math.floor(Math.random() * Math.floor(100)));
+  //   this.setState({yList});
+  // }
 
   pageCountChange() {
     const { data } = this.state;
@@ -251,6 +253,7 @@ class GraphList extends Component {
     })
   }
 
+  // ページングの為のグラフのインデックスを均等に分割する関数
   devideDataForPaging() {
     const { graphLimitRow, graphLimitColumn, data } = this.state;
     const limit = graphLimitRow * graphLimitColumn;
@@ -261,15 +264,16 @@ class GraphList extends Component {
       })
     }
 
+    // arrをunitづつ分割する
     function divide(arr, unit){
       let result = [];
-      console.log(arr, unit);
       for(let i = 0; i < arr.length; i+=unit) {
         result.push(arr.slice(i, i + unit));
       }
       return result
     }
 
+    // 配列の配列を平坦化する
     function flatten(arr) {
       return arr.reduce((p, c) => {
         if(Array.isArray(c)) {
@@ -287,13 +291,14 @@ class GraphList extends Component {
     }
   }
 
+  // ページングを変更するメソッド
   handlePageChange(page) {
     this.setState({activePage: page.selected});
   }
 
+  // graphのdataumを作成するメソッド
   createDataum(id) {
     console.log('create!');
-    // const yList = Array.from(Array(50), (v, k) => k).map(i => Math.floor(Math.random() * Math.floor(100)))
     const { yList } = this.state;
 
     return [{
@@ -311,6 +316,7 @@ class GraphList extends Component {
     }
   }
 
+  // tagのデータをグラフ用に加工して返却するメソッド
   toDataum(tags, id) {
     if(!tags) return
     console.log("====================");
@@ -352,6 +358,8 @@ class GraphList extends Component {
                 // const dataum = this.createDataum(i);
                 console.log("====================");
                 console.log("i: ", i);
+                console.log("data", data);
+                console.log("List", this.props.graph.tagReportList);
                 console.log("tagReportList[i]: ", this.props.graph.tagReportList[i]);
                 const t = this.toDataum(this.props.graph.tagReportList[i], i);
                 // console.log("t: ", t);
