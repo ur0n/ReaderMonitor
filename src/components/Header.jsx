@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderStyle: 'solid',
     borderColor: colors.elBorderColor,
-    borderWidth: '0 0 1px 0'
+    borderWidth: '0 0 1px 0',
   },
   title: {
     flex: 1,
