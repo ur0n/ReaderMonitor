@@ -33,11 +33,6 @@ class App extends Component {
   render(){
     return (
       <ColumnContainer style={styles.app}>
-        <Header
-          style={styles.header}
-          title=""
-          titleStyle={styles.headerTitle}
-          />
         <MonitorRouter />
       </ColumnContainer>
     );
