@@ -9,16 +9,28 @@ export const graphReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_GRAPH_REPORT:
       const id = action.message.id;
-      return {
-        ...state,
-        tagReportList: {
-          ...state.tagReportList,
-          [id]: state.tagReportList[id] === undefined? [action.message] : [
-            ...state.tagReportList[id],
-            action.message
-          ]
-        },
-        tagIdList: Array.from(new Set([...state.tagIdList, id]))
+
+      // すでにある場合
+      if(state.tagIdList.indexOf(id) !== -1){
+        const newReportList = [...state.tagReportList[id], action.message];
+        if(newReportList.length >= 50)newReportList.shift();
+
+        return {
+          ...state,
+          tagReportList: {
+            ...state.tagReportList,
+            [id]: newReportList,
+          },
+        }
+      } else {
+        return {
+          ...state,
+          tagReportList: {
+            ...state.tagReportList,
+            [id]: [action.message]
+          },
+          tagIdList: Array.from(new Set([...state.tagIdList, id])).sort()
+        }
       }
       break;
     case CLEAN_REPORT_LIST:

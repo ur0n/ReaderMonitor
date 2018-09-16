@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import NVD3Chart from 'react-nvd3';
 import { timeFormat } from 'd3-time-format';
 import * as d3 from 'd3';
+import { Input, Button } from 'element-react';
 import { connect } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
 import ReactPaginate from 'react-paginate';
@@ -24,8 +25,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  searchContainer: {
+    flex: 1,
+    display: 'flex',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '10px',
+  },
   content: {
-    flex: 5,
+    flex: 6,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -43,7 +52,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   pagenation: {
-    flex: 1
+    flex: 1,
+    display: 'flex',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 })
 
@@ -77,15 +90,21 @@ class GraphList extends Component {
       containerWidth: 0,
       containerHeight: 0,
       data: [],
-      offset: 0,
+      searchValue: '',
+      searchedData: [],
       pageCount: 10,
+      searchPageCount: 10,
       activePage: 0,
+      searchActivePage: 0,
       isFirstFinish: false,
+      isSearch: false,
       graphLimitRow: 0,
       graphLimitColumn: 0,
-      // yList: Array.from(Array(50), (v, k) => k).map(i => Math.floor(Math.random() * Math.floor(100))),
     }
     this.containerRef = React.createRef();
+    this.search = {
+      height: 40,
+    }
     this.graph = {
       height: 300,
       width: 300,
@@ -94,11 +113,16 @@ class GraphList extends Component {
       height: 54,
       width: 164,
     }
+    this.searchMargin = createPM(10, 10, 10, 10);
     this.contentPadding = createPM(10, 10, 10, 10);
     this.graphMargin = createPM(14, 14, 14, 14);
     this.graphPadding = createPM(25, 25, 0, 0);
 
-    this.hOne = this.contentPadding.top +
+    this.hOne =
+    this.searchMargin.top +
+    this.search.height +
+    this.searchMargin.under +
+    this.contentPadding.top +
     this.graphMargin.top +
     this.graphPadding.top +
     this.graph.height +
@@ -114,12 +138,6 @@ class GraphList extends Component {
     this.graphPadding.right +
     this.graphMargin.right +
     this.contentPadding.right;
-
-    const now = new Date();
-    const last = moment(now).add(100, 'm').toDate();
-    this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
-    this.endDate = new Date(last.getFullYear(), last.getMonth(), last.getDate(), last.getHours(), last.getMinutes(), last.getSeconds());
-    this.millisecondsBetweenTicks = 5000;
   }
 
   componentWillMount() {
@@ -132,27 +150,29 @@ class GraphList extends Component {
     const { client } = this.props.home;
     const call = client.connection.tagStream();
 
-    this.dataListener = message => {
-      const { graphLimitRow, graphLimitColumn, data } = this.state;
+    const dataListener = message => {
+      const { graphLimitRow, graphLimitColumn, data, graphs } = this.state;
       const { tagIdList } = this.props.graph;
       const limit = graphLimitRow * graphLimitColumn;
+      const id = message.id
 
-      if(tagIdList.indexOf(message.id) === -1){
+      if(tagIdList.indexOf(id) === -1){
         const lastPage = data[data.length - 1];
         if(lastPage !== undefined && lastPage.length < limit){
-          data[data.length - 1].push(message.id);
+          data[data.length - 1].push(id);
         }else {
-          data.push([message.id]);
+          data.push([id]);
         }
         this.setState({
           data: data,
           pageCount: data.length,
         });
       }
+
       this.props.getTagReport(this.id, message);
     }
 
-    call.on('data', this.dataListener);
+    call.on('data', dataListener);
 
     call.on('status', status => {
       console.log("============= This status log is call from grpc in GraphList ===============");
@@ -178,20 +198,10 @@ class GraphList extends Component {
     this.startTagReporting();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if(this.state === nextState) return false;
-    else return true
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // this.ticks();
-  }
-
-  componentWilUpdate() {
-  }
-
-  componentDidUpdate() {
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if(this.state === nextState) return false;
+  //   else return true
+  // }
 
   // 画面がリサイズされた時
   handleResize(e) {
@@ -239,13 +249,6 @@ class GraphList extends Component {
     }
   }
 
-  // ticks() {
-  //   const { yList } = this.state;
-  //   if(yList.length >= 50) yList.shift();
-  //   yList.push(Math.floor(Math.random() * Math.floor(100)));
-  //   this.setState({yList});
-  // }
-
   pageCountChange() {
     const { data } = this.state;
     this.setState({
@@ -260,34 +263,8 @@ class GraphList extends Component {
 
     if(limit !== 0) {
       this.setState({
-        data: divide(flatten(data), limit)
+        data: this._divide(this._flatten(data), limit)
       })
-    }
-
-    // arrをunitづつ分割する
-    function divide(arr, unit){
-      let result = [];
-      for(let i = 0; i < arr.length; i+=unit) {
-        result.push(arr.slice(i, i + unit));
-      }
-      return result
-    }
-
-    // 配列の配列を平坦化する
-    function flatten(arr) {
-      return arr.reduce((p, c) => {
-        if(Array.isArray(c)) {
-          return [
-            ...p,
-            ...c
-          ]
-        } else {
-          return [
-            ...p,
-            c
-          ]
-        }
-      }, [])
     }
   }
 
@@ -296,45 +273,75 @@ class GraphList extends Component {
     this.setState({activePage: page.selected});
   }
 
-  // graphのdataumを作成するメソッド
-  createDataum(id) {
-    console.log('create!');
-    const { yList } = this.state;
-
-    return [{
-      key: `id: ${id}`,
-      area: false,
-      color: 'slategray',
-      values: yList.map((y, i) => createValue(y, i))
-    }];
-
-    function createValue(y, i) {
-      return {
-        y,
-        x: moment(new Date()).add(i, 's').toDate()
-      }
-    }
+  // ページングを変更するメソッド 検索用
+  handleSearchPageChange(page) {
+    this.setState({searchActivePage: page.selected});
   }
 
   // tagのデータをグラフ用に加工して返却するメソッド
   toDataum(tags, id) {
     if(!tags) return
-    console.log("====================");
-    console.log("Tagsですよ", tags);
-    console.log("====================");
     return [{
       key: `id: ${id}`,
       area: false,
       color: 'slategray',
-      values: tags.map((tag, i) => createValue(tag.rssi, i))
+      values: tags
     }];
+  }
 
-    function createValue(y, i) {
-      return {
-        y,
-        x: moment(new Date()).add(i, 's').toDate()
-      }
+  // 検索欄に文字が入力されるたびに呼ばれる
+  handleSearchInputChange(value){
+    const { data, searchedData, graphLimitRow, graphLimitColumn } = this.state;
+    const limit = graphLimitRow * graphLimitColumn;
+
+    if(value.length === 0){
+      this.setState({isSearch: false})
     }
+
+    let filtered;
+    if(value.indexOf(',') !== -1){
+      const splitted = value.split(', ');
+      filtered = this._flatten(data).filter(id => splitted
+        .filter(value => value.length !== 0)
+        .filter(value => id.indexOf(value) === 0)
+        .length !== 0
+      )
+    } else {
+      filtered = this._flatten(data).filter(id => id.indexOf(value) === 0)
+    }
+    const divided = this._divide(filtered, limit);
+
+    this.setState({
+      isSearch: true,
+      searchValue: value,
+      searchedData: divided,
+      searchPageCount: divided.length
+    })
+  }
+
+  getX(d){
+    return new Date(parseInt(d.time) / 1000);
+  }
+
+  getY(d){
+    return d.rssi;
+  }
+
+  // arrをunitづつ分割する
+  _divide(arr, unit){
+    let result = [];
+    for(let i = 0; i < arr.length; i+=unit) {
+      result.push(arr.slice(i, i + unit));
+    }
+    return result
+  }
+
+  // 配列の配列を平坦化する
+  _flatten(arr) {
+    return arr.reduce((p, c) => {
+      if(Array.isArray(c))return [...p, ...c];
+      else return [...p, c];
+    }, [])
   }
 
   render(){
@@ -342,8 +349,13 @@ class GraphList extends Component {
       graphLimitRow,
       graphLimitColumn,
       data,
+      searchedData,
       pageCount,
-      activePage
+      searchPageCount,
+      activePage,
+      searchActivePage,
+      searchValue,
+      isSearch
     } = this.state;
 
     return (
@@ -352,48 +364,91 @@ class GraphList extends Component {
           className={css(styles.innerContainer)}
           ref={this.containerRef}
           >
+          <div className={css(styles.searchContainer)}>
+            <Input
+              value={searchValue}
+              prepend={<Button type="primary" icon="search">Search</Button>}
+              onChange={e => this.handleSearchInputChange(e)}
+            />
+          </div>
           <div className={css(styles.content)}>
-            {data.length !== 0 && (
+            {isSearch && searchedData.length !== 0 && (
+              searchedData[searchActivePage].map(i => {
+                if(this.props.graph.tagReportList[i]){
+                  const dataum = this.toDataum(this.props.graph.tagReportList[i], i);
+                  return (
+                    <div key={i} className={css(styles.chartCard)}>
+                      <NVD3Chart
+                        type='lineChart'
+                        datum={dataum}
+                        width={300}
+                        height={300}
+                        x={this.getX}
+                        y={this.getY}
+                        xAxis={{
+                          tickFormat: d => timeFormat('%X')(d),
+                        }}
+                        yDomain={[-75, -40]}
+                        />
+                    </div>
+                  )
+                }
+              }))
+            }
+
+            {!isSearch && data.length !== 0 && (
               data[activePage].map(i => {
-                // const dataum = this.createDataum(i);
-                console.log("====================");
-                console.log("i: ", i);
-                console.log("data", data);
-                console.log("List", this.props.graph.tagReportList);
-                console.log("tagReportList[i]: ", this.props.graph.tagReportList[i]);
-                const t = this.toDataum(this.props.graph.tagReportList[i], i);
-                // console.log("t: ", t);
-                console.log("====================");
-                return (
-                  <div key={i} className={css(styles.chartCard)}>
-                    <NVD3Chart
-                      type='lineChart'
-                      datum={t}
-                      width={300}
-                      height={300}
-                      x='x'
-                      y='y'
-                      xAxis={{
-                        tickFormat: d => timeFormat('%X')(d),
-                      }}
-                      />
-                  </div>
-                )
+                if(this.props.graph.tagReportList[i]){
+                  const dataum = this.toDataum(this.props.graph.tagReportList[i], i);
+                  return (
+                    <div key={i} className={css(styles.chartCard)}>
+                      <NVD3Chart
+                        type='lineChart'
+                        datum={dataum}
+                        width={300}
+                        height={300}
+                        x={this.getX}
+                        y={this.getY}
+                        xAxis={{
+                          tickFormat: d => timeFormat('%X')(d),
+                        }}
+                        yDomain={[-75, -40]}
+                        />
+                    </div>
+                  )
+                }
               }))
             }
           </div>
+
           <div className={css(styles.pagenation)}>
-            <ReactPaginate previousLabel={"previous"}
-              nextLabel={"next"}
-              breakLabel={<a href="">...</a>}
-              breakClassName={"break-me"}
-              pageCount={this.state.pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={this.handlePageChange.bind(this)}
-              containerClassName={"pagination"}
-              subContainerClassName={"pages pagination"}
-              activeClassName={"active"} />
+            {isSearch && (
+              <ReactPaginate previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={<a href="">...</a>}
+                breakClassName={"break-me"}
+                pageCount={this.state.searchPageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={this.handleSearchPageChange.bind(this)}
+                containerClassName={"pagination"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"} />
+            )}
+
+            {!isSearch && (
+              <ReactPaginate previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={<a href="">...</a>}
+                breakClassName={"break-me"}
+                pageCount={this.state.pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={this.handlePageChange.bind(this)}
+                containerClassName={"pagination"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"} />
+            )}
           </div>
         </div>
       </ColumnContainer>

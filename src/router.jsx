@@ -6,7 +6,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { AntennaListScreen } from './home';
 import { SideBarScreen } from './side';
 import { LogViewScreen } from './log';
-import { GraphListScreen } from './graph';
+import { GraphListScreen, GraphTestScreen } from './graph';
 
 const styles = StyleSheet.create({
   root: {
