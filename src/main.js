@@ -40,14 +40,8 @@ const commandOrCtrl = () => {
 function initialMenu() {
   const template = [
     {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Toggle Chromium Developer Tools',
-          accelerator: 'Alt+' + commandOrCtrl() + '+I',
-          click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
-        }
-      ]
+      label: "Electron",
+      submenu: []
     },
     {
       label: "Edit",
@@ -59,6 +53,21 @@ function initialMenu() {
         { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
         { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
         { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Toggle Chromium Developer Tools',
+          accelerator: 'Alt+' + commandOrCtrl() + '+I',
+          click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
+        },
+        {
+          label: 'Page Reload',
+          accelerator: 'CmdOrCtrl+R' + commandOrCtrl() + '+R',
+          click: function() { BrowserWindow.getFocusedWindow().reload(); }
+        }
       ]
     }
   ]
