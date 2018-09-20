@@ -5,7 +5,6 @@ import { StyleSheet, css } from 'aphrodite';
 
 import { AntennaListScreen } from './home';
 import { SideBarScreen } from './side';
-import { LogViewScreen } from './log';
 import { GraphListScreen, GraphTestScreen } from './graph';
 
 const styles = StyleSheet.create({
@@ -41,8 +40,7 @@ class MonitorRouter extends React.Component {
           <div className={css(styles.root)}>
             <Switch>
               <Route exact path="/" component={AntennaListScreen} />
-              <Route path="/antenna/graph/:id" component={GraphListScreen} />
-              <Route path="/antenna/:id" component={LogViewScreen} />
+              <Route path="/graph" component={GraphListScreen} />
             </Switch>
           </div>
         </RowContainer>
