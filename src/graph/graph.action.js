@@ -1,12 +1,11 @@
 import { dispatch } from 'redux';
 import { GET_GRAPH_REPORT, CLEAN_REPORT_LIST } from './graph.type'
 
-export const getTagReport = (id, message)=> {
+export const getTagReport = (message)=> {
   return dispatch => {
     dispatch({
       type: GET_GRAPH_REPORT,
-      message,
-      id
+      message
     });
   };
 }

@@ -78,7 +78,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getTagReport: (id, message) => dispatch(getTagReport(id, message)),
+    getTagReport: message => dispatch(getTagReport(message)),
     cleanReportList: id => dispatch(cleanReportList(id)),
   }
 }
@@ -142,13 +142,12 @@ class GraphList extends Component {
 
   componentWillMount() {
     console.log(this.props);
-    this.id = this.props.match.params.id;
   }
 
   // GRPCのイベントの設定
   startTagReporting(){
     const { client } = this.props.home;
-    const call = client.connection.tagStream();
+    const call = client.connection.tagAllStream();
 
     const dataListener = message => {
       const { graphLimitRow, graphLimitColumn, data, graphs } = this.state;
@@ -169,7 +168,7 @@ class GraphList extends Component {
         });
       }
 
-      this.props.getTagReport(this.id, message);
+      this.props.getTagReport(message);
     }
 
     call.on('data', dataListener);
@@ -188,7 +187,8 @@ class GraphList extends Component {
       console.log('END');
     })
 
-    call.write({id: this.id});
+    // 暫定的にstatusは1として送っている
+    call.write({status: 1});
     this.call = call;
   }
 
@@ -211,7 +211,8 @@ class GraphList extends Component {
   // 画面がリサイズされた時に実行される関数の実態
   // 画面のグラフの表示個数の設定等をしている
   handleContainerChange(ref) {
-    if(ref === null) return;
+    if(ref === null || ref.current === null) return;
+    console.log("ref", ref);
 
     const { clientWidth, clientHeight } = ref.current;
     const { containerWidth, containerHeight, isFirstFinish } = this.state;

@@ -78,10 +78,8 @@ class SideBar extends Component {
     }
   }
 
-  antennaSelect(id){
-    if(this.props.location.pathname !== `/antenna/${id}`){
-      this.props.history.push(`/antenna/${id}`);
-    }
+  graphOpen(){
+    this.props.history.push('/graph');
   }
 
   render(){
@@ -101,6 +99,12 @@ class SideBar extends Component {
               Home
             </div>
           </Menu.Item>
+          <Menu.Item index="2" className={css(styles.home)}>
+            <div onClick={this.graphOpen.bind(this)}>
+              <i className="el-icon-menu" />
+              Graph
+            </div>
+          </Menu.Item>
           <Menu.ItemGroup title="AntennaList" className={ css(styles.antennaList) }>
             <div className={ css(commonStyles.hMax, commonStyles.scrollAble) } >
 
@@ -109,13 +113,15 @@ class SideBar extends Component {
                   const antennaItems = antennaList[host].map((antenna, j)=> {
                     return (
                       <Menu.Item key={antenna.id} index={`${((Object.keys(antennaList).length * i) + (j + i)) + 2}`}>
-                        <div onClick={() => this.antennaSelect(antenna.id) }>
+                        <div>
                           {antenna.status && (
                             <i className={`${css(styles.success)} el-icon-circle-check`} />
                           )}
+
                           {!antenna.status && (
                             <i className={`${css(styles.danger)} el-icon-circle-close`} />
                           )}
+
                           { antenna.id }
                         </div>
                       </Menu.Item>

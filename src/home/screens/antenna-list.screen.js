@@ -114,7 +114,7 @@ class AntennaList extends Component {
                   key={antenna.id}
                   name={antenna.id}
                   status={antenna.status}
-                  onClick={() => this.handleAntennaClick(antenna)}
+                  onClick={() => console.log("click", antenna.id)}
                   >
                 </Antenna>
               )
