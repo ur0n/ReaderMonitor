@@ -12,8 +12,8 @@ export const graphReducer = (state = initialState, action) => {
 
       // すでにある場合
       if(state.tagIdList.indexOf(id) !== -1){
-        const newReportList = [...state.tagReportList[id], action.message];
-        if(newReportList.length >= 50)newReportList.shift();
+        let newReportList = [...state.tagReportList[id], action.message];
+        if(newReportList.length >= 100) newReportList = newReportList.slice(10);
 
         return {
           ...state,
