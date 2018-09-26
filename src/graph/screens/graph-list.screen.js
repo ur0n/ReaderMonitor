@@ -100,6 +100,7 @@ class GraphList extends Component {
       isSearch: false,
       graphLimitRow: 0,
       graphLimitColumn: 0,
+      updatePoint: 0,
     }
     this.containerRef = React.createRef();
     this.search = {
@@ -153,7 +154,7 @@ class GraphList extends Component {
       const { graphLimitRow, graphLimitColumn, data, graphs } = this.state;
       const { tagIdList } = this.props.graph;
       const limit = graphLimitRow * graphLimitColumn;
-      const id = message.id
+      const id = message.id;
 
       if(tagIdList.indexOf(id) === -1){
         const lastPage = data[data.length - 1];
@@ -196,12 +197,60 @@ class GraphList extends Component {
     this.handleContainerChange(this.containerRef);
     window.addEventListener('resize', this.handleResize.bind(this), false);
     this.startTagReporting();
+    this.interval = setInterval(() => this.setState({ updatePoint: Math.random() }), 1000);
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   if(this.state === nextState) return false;
-  //   else return true
-  // }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // const { tagIdList, tagReportList } = this.props.graph;
+    //
+    // // tagIdListが増えていたらupdate
+    // if(tagIdList.length !== nextProps.graph.tagIdList.length) return true;
+    //
+    // // 今表示されているグラフのタグのデータが追加された時だけupdate
+    // const isReportUpdate = this.isReportUpdate(tagReportList, nextProps.graph.tagReportList);
+    // if(isReportUpdate) return true;
+    //
+    // if(this.state === nextState) return false;
+    // else return true
+
+    /*
+     上のやり方でやって見たが性能的にきつかったので1秒ごとに
+     アップデートするやり方に変更
+    */
+    if(this.state.updatePoint === nextState.updatePoint) return false;
+    else return true;
+  }
+
+  // 今見ているidを参照　
+  // そのidのデータが変化しているかを判定
+  isReportUpdate(nextTagReportList, currentTagReportList){
+    const ids = this.getRenderedTagId();
+    if(ids === undefined) return false;
+    if(ids.length === 0) return false;
+
+    const currentReportList = ids.reduce((c, id) => {
+      return {...c, [id]: currentTagReportList[id] === undefined? [] : currentTagReportList[id]};
+    }, {});
+
+    const nextReportList = ids.reduce((c, id) => {
+      return {...c, [id]: nextTagReportList[id] === undefined? [] : nextTagReportList[id]};
+    }, {});
+
+    return ids.some(id => {
+      const nLength = nextReportList[id];
+      const cLength = currentReportList[id];
+      return nextReportList[id][nLength - 1] === currentReportList[id][cLength - 1]
+    });
+  }
+
+  getRenderedTagId(){
+    const { data, searchedData, isSearch, activePage, searchActivePage } = this.state;
+    return isSearch? searchedData[searchActivePage] : data[activePage];
+  }
 
   // 画面がリサイズされた時
   handleResize(e) {
@@ -321,7 +370,7 @@ class GraphList extends Component {
   }
 
   getX(d){
-    return new Date(parseInt(d.time) / 1000);
+    return new Date(parseInt(d.time));
   }
 
   getY(d){
@@ -359,6 +408,7 @@ class GraphList extends Component {
       isSearch
     } = this.state;
 
+    console.log("render");
     return (
       <ColumnContainer style={styles.container}>
         <div
@@ -390,6 +440,8 @@ class GraphList extends Component {
                           tickFormat: d => timeFormat('%X')(d),
                         }}
                         yDomain={[-75, -40]}
+                        tooltip={{enabled: false}}
+                        legend={{enabled: false}}
                         />
                     </div>
                   )
@@ -401,6 +453,7 @@ class GraphList extends Component {
               data[activePage].map(i => {
                 if(this.props.graph.tagReportList[i]){
                   const dataum = this.toDataum(this.props.graph.tagReportList[i], i);
+                  console.log(this.props.graph.tagReportList[i].length);
                   return (
                     <div key={i} className={css(styles.chartCard)}>
                       <NVD3Chart
@@ -414,6 +467,8 @@ class GraphList extends Component {
                           tickFormat: d => timeFormat('%X')(d),
                         }}
                         yDomain={[-75, -40]}
+                        tooltip={{enabled: false}}
+                        legend={{enabled: false}}
                         />
                     </div>
                   )

@@ -10,7 +10,7 @@ import {
 import { MonitorClient } from '../lib';
 
 const initializeMonitorClient = () => {
-  return new MonitorClient("localhost", 50051);
+  return new MonitorClient("163.143.95.216", 50051);
 }
 
 const initialState = {
