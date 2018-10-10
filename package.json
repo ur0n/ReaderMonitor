@@ -44,7 +44,7 @@
     "bytebuffer": "^5.0.1",
     "d3": "^5.5.0",
     "electron-debug": "^1.5.0",
-    "element-react": "^1.4.11",
+    "element-react": "^1.4.21",
     "element-theme-chalk": "^2.2.0",
     "element-theme-default": "^1.4.13",
     "google-protobuf": "^3.6.1",

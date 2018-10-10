@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import NVD3Chart from 'react-nvd3';
 import { timeFormat } from 'd3-time-format';
 import * as d3 from 'd3';
-import { Input, Button } from 'element-react';
+import { Input, Button, Slider } from 'element-react';
 import { connect } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
 import ReactPaginate from 'react-paginate';
@@ -33,8 +33,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: '10px',
   },
+  sliderContainer: {
+    flex: 1,
+    display: 'flex',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '10px',
+  },
+  sliderContent: {
+    width: '80%',
+  },
   content: {
-    flex: 6,
+    flex: 7,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -98,47 +109,31 @@ class GraphList extends Component {
       searchActivePage: 0,
       isFirstFinish: false,
       isSearch: false,
+      graphSize: 300,
       graphLimitRow: 0,
       graphLimitColumn: 0,
       updatePoint: 0,
     }
     this.containerRef = React.createRef();
     this.search = {
-      height: 40,
+      height: 44,
+    }
+    this.slider = {
+      height: 44,
     }
     this.graph = {
-      height: 300,
-      width: 300,
+      height: this.state.graphSize,
+      width: this.state.graphSize,
     };
     this.pagenation = {
       height: 54,
       width: 164,
     }
     this.searchMargin = createPM(10, 10, 10, 10);
+    this.sliderMargin = createPM(10, 10, 10, 10);
     this.contentPadding = createPM(10, 10, 10, 10);
     this.graphMargin = createPM(14, 14, 14, 14);
     this.graphPadding = createPM(25, 25, 0, 0);
-
-    this.hOne =
-    this.searchMargin.top +
-    this.search.height +
-    this.searchMargin.under +
-    this.contentPadding.top +
-    this.graphMargin.top +
-    this.graphPadding.top +
-    this.graph.height +
-    this.graphPadding.under +
-    this.graphMargin.under +
-    this.contentPadding.under +
-    this.pagenation.height;
-
-    this.wOne = this.contentPadding.left +
-    this.graphMargin.left +
-    this.graphPadding.left +
-    this.graph.width +
-    this.graphPadding.right +
-    this.graphMargin.right +
-    this.contentPadding.right;
   }
 
   componentWillMount() {
@@ -221,8 +216,25 @@ class GraphList extends Component {
      上のやり方でやって見たが性能的にきつかったので1秒ごとに
      アップデートするやり方に変更
     */
-    if(this.state.updatePoint === nextState.updatePoint) return false;
-    else return true;
+    if(this.state.updatePoint !== nextState.updatePoint) return true;
+
+    /*
+       グラフサイズが変更された時はアップデート
+    */
+    if(this.state.graphSize !== nextState.graphSize) return true;
+
+    /*
+      検索されたらアップデート
+    */
+    if(this.state.searchValue !== nextState.searchValue) return true;
+
+    /*
+      ページ系が変更されたらアップデート
+    */
+    if(this.state.activePage !== nextState.activePage) return true;
+    if(this.state.searchActivePage !== nextState.searchActivePage) return true;
+
+    return false;
   }
 
   // 今見ているidを参照　
@@ -264,7 +276,7 @@ class GraphList extends Component {
     console.log("ref", ref);
 
     const { clientWidth, clientHeight } = ref.current;
-    const { containerWidth, containerHeight, isFirstFinish } = this.state;
+    const { containerWidth, containerHeight, isFirstFinish, graphSize } = this.state;
     if(
       containerWidth !== 0 &&
       containerHeight !== 0 &&
@@ -272,8 +284,8 @@ class GraphList extends Component {
       clientHeight === containerHeight
      ) return;
 
-    const graphLimitRow = Math.floor(clientHeight / this.hOne);
-    const graphLimitColumn = Math.floor(clientWidth / this.wOne);
+    const graphLimitRow = Math.floor(clientHeight / this.calcH(graphSize));
+    const graphLimitColumn = Math.floor(clientWidth / this.calcW(graphSize));
 
     if(isFirstFinish) {
       this.setState({
@@ -369,12 +381,56 @@ class GraphList extends Component {
     })
   }
 
+  // sliderの変更時の処理をする
+  // 変更された後の値が取れる
+  handleSliderChange(value) {
+    const { containerWidth, containerHeight } = this.state;
+
+    const graphLimitRow = Math.floor(containerWidth / this.calcH(value));
+    const graphLimitColumn = Math.floor(containerHeight / this.calcW(value));
+
+    this.setState({
+      graphLimitRow,
+      graphLimitColumn,
+      graphSize: value,
+    });
+    this.devideDataForPaging();
+    this.pageCountChange();
+  }
+
   getX(d){
     return new Date(parseInt(d.time));
   }
 
   getY(d){
     return d.rssi;
+  }
+
+  calcH(graphSize){
+    return this.searchMargin.top +
+    this.search.height +
+    this.searchMargin.under +
+    this.sliderMargin.top +
+    this.slider.height +
+    this.sliderMargin.under +
+    this.contentPadding.top +
+    this.graphMargin.top +
+    this.graphPadding.top +
+    graphSize +
+    this.graphPadding.under +
+    this.graphMargin.under +
+    this.contentPadding.under +
+    this.pagenation.height;
+  }
+
+  calcW(graphSize){
+    return this.contentPadding.left +
+    this.graphMargin.left +
+    this.graphPadding.left +
+    graphSize +
+    this.graphPadding.right +
+    this.graphMargin.right +
+    this.contentPadding.right;
   }
 
   // arrをunitづつ分割する
@@ -405,10 +461,10 @@ class GraphList extends Component {
       activePage,
       searchActivePage,
       searchValue,
-      isSearch
+      isSearch,
+      graphSize,
     } = this.state;
 
-    console.log("render");
     return (
       <ColumnContainer style={styles.container}>
         <div
@@ -422,6 +478,17 @@ class GraphList extends Component {
               onChange={e => this.handleSearchInputChange(e)}
             />
           </div>
+          <div className={css(styles.sliderContainer)}>
+            <Slider
+              onChange={this.handleSliderChange.bind(this)}
+              className={css(styles.sliderContent)}
+              value={this.state.graphSize}
+              step="25"
+              showStops={true}
+              min={50}
+              max={500}
+              />
+          </div>
           <div className={css(styles.content)}>
             {isSearch && searchedData.length !== 0 && (
               searchedData[searchActivePage].map(i => {
@@ -432,8 +499,8 @@ class GraphList extends Component {
                       <NVD3Chart
                         type='lineChart'
                         datum={dataum}
-                        width={300}
-                        height={300}
+                        width={graphSize}
+                        height={graphSize}
                         x={this.getX}
                         y={this.getY}
                         xAxis={{
@@ -459,8 +526,8 @@ class GraphList extends Component {
                       <NVD3Chart
                         type='lineChart'
                         datum={dataum}
-                        width={300}
-                        height={300}
+                        width={graphSize}
+                        height={graphSize}
                         x={this.getX}
                         y={this.getY}
                         xAxis={{
